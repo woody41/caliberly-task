@@ -10,7 +10,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 public class GameRunner {
 
 	public static void main(String[] args) {
-		Configurator.setRootLevel(Level.INFO);
+		Configurator.setRootLevel(Level.DEBUG);
 		GameSettings gameSettings = new GameSettings(new GameSettingsLoader("config.json"));
 		new GameMachine(gameSettings);
 	}

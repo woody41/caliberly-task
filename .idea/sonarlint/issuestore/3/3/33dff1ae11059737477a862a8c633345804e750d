@@ -1,5 +1,5 @@
 
-y	java:S116"XRename this field "covered_areas" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(îˆ˜ïüÿÿÿÿ8“¶Ùš2
-X	java:S125"<This block of commented-out lines of code should be removed.(Ô‹¶»8–¶Ùš2
+y	java:S116"XRename this field "covered_areas" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(îˆ˜ïüÿÿÿÿ8ƒ†çš2
+X	java:S125"<This block of commented-out lines of code should be removed.(Ô‹¶»8…†çš2
 O
-java:S1128"2Remove this unused import 'java.awt.geom.Point2D'.(ˆÕ­Ü8 ßš2
+java:S1128"2Remove this unused import 'java.awt.geom.Point2D'.(ˆÕ­Ü8¬Óéš2
