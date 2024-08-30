@@ -1,5 +1,6 @@
 package com.caliberly;
 
+import com.caliberly.enums.CombinationWhen;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +11,10 @@ public class WinCombination {
 
 	@Setter
 	private String name;
-//	private double reward_multiplier;
+	//	private double reward_multiplier;
 //	private int count;
-//	private String when;
+	@Setter
+	private CombinationWhen when;
 //	private String group;
 //	private String covered_areas;
 }

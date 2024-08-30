@@ -19,3 +19,5 @@ s
 Csrc/main/java/com/caliberly/settings/config/GameSettingsLoader.java,0/a/0a7ecb90c658e361b2bfce8d0640abdb9d4147ef
 _
 /src/main/java/com/caliberly/WinCombination.java,3/3/33dff1ae11059737477a862a8c633345804e750d
+f
+6src/main/java/com/caliberly/enums/CombinationWhen.java,2/e/2e55d6dc4420cbd979b65179dcc1cee74aac82eb

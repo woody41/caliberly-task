@@ -2,6 +2,7 @@ package com.caliberly.settings.config;
 
 import com.caliberly.Symbol;
 import com.caliberly.WinCombination;
+import com.caliberly.enums.CombinationWhen;
 import com.caliberly.enums.SymbolType;
 import com.google.gson.*;
 
@@ -71,7 +72,7 @@ public class GameSettingsLoader {
 
 			WinCombination combination = gson.fromJson(symbolDetails, WinCombination.class);
 			combination.setName(name);
-			//combination.setSymbolType(SymbolType.fromString(symbolDetails.getAsJsonPrimitive("type").getAsString()));
+			combination.setWhen(CombinationWhen.fromString(symbolDetails.getAsJsonPrimitive("when").getAsString()));
 			winCombination.add(combination);
 		}
 
