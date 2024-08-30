@@ -1,3 +1,5 @@
 
-X	java:S125"<This block of commented-out lines of code should be removed.(Ô‹¶»8ğÙ‰š2
-W	java:S125"<This block of commented-out lines of code should be removed.(Û¼íM8ıöŸš2
+y	java:S116"XRename this field "covered_areas" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(îˆ˜ïüÿÿÿÿ8“¶Ùš2
+X	java:S125"<This block of commented-out lines of code should be removed.(Ô‹¶»8–¶Ùš2
+O
+java:S1128"2Remove this unused import 'java.awt.geom.Point2D'.(ˆÕ­Ü8 ßš2
