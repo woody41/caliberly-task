@@ -1,8 +1,13 @@
 package com.caliberly;
 
 import com.caliberly.combinations.WinCombination;
+import com.caliberly.combinations.WinningCombination;
+import com.caliberly.enums.CombinationWhen;
+import com.caliberly.enums.SymbolType;
+import com.caliberly.model.Symbol;
 import com.caliberly.model.SymbolTile;
 import com.caliberly.settings.config.GameSettings;
+import com.caliberly.utils.CombinationChecker;
 import com.caliberly.utils.GameAreaPrinter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +34,8 @@ public class GameMachine {
 
 	public void startGame(int amount) {
 		this.generateArea();
+		GameAreaPrinter.print(this.gameArea); // visualization of game area
+		this.checkResults();
 	}
 
 	/**
@@ -42,12 +49,31 @@ public class GameMachine {
 				this.gameArea.add(new SymbolTile(coordinates, this.settings.getSymbols()));
 			}
 		}
-		GameAreaPrinter.print(this.gameArea);
 	}
 
-	private void showResults() {
+	private void checkResults() {
+		List<WinningCombination> winningCombinations = new LinkedList<>();
 		for (WinCombination winCombination : this.settings.getWinCombinations()) {
+			if (winCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
+				//check for same symbol
+				for (Symbol symbol : settings.getSymbols()) {
+					if (symbol.getSymbolType().equals(SymbolType.STANDARD)) {
+						WinningCombination combination = CombinationChecker.getSameSymbolResult(winCombination, gameArea, symbol);
+						if (combination != null) {
+							winningCombinations.add(combination);
+						}
+					}
+				}
+				//check for rest
+				//TODO
+			}
+		}
+		this.showResults(winningCombinations);
+	}
 
+	private void showResults(List<WinningCombination> winningCombinations) {
+		for (WinningCombination winningCombination : winningCombinations) {
+			logger.debug(winningCombination.getName() + " is winning combinations. Winning symbol: " + winningCombination.getSymbol().getName());
 		}
 	}
 

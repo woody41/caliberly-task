@@ -1,5 +1,6 @@
 package com.caliberly.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.awt.geom.Point2D;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 @Getter
+@EqualsAndHashCode
 public class SymbolTile {
 	private Symbol symbol;
 	private final Point2D.Float coordinates;
