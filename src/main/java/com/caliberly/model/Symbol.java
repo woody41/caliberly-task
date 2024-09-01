@@ -1,4 +1,4 @@
-package com.caliberly;
+package com.caliberly.model;
 
 import com.caliberly.enums.SymbolType;
 import lombok.AllArgsConstructor;

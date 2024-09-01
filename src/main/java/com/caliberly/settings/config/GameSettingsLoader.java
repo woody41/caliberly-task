@@ -1,7 +1,7 @@
 package com.caliberly.settings.config;
 
-import com.caliberly.Symbol;
-import com.caliberly.WinCombination;
+import com.caliberly.model.Symbol;
+import com.caliberly.combinations.WinCombination;
 import com.caliberly.enums.CombinationWhen;
 import com.caliberly.enums.SymbolType;
 import com.google.gson.*;

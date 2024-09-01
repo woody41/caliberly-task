@@ -1,16 +1,15 @@
-package com.caliberly;
+package com.caliberly.combinations;
 
 import com.caliberly.enums.CombinationWhen;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class WinCombination {
+public class WinCombination implements GeneralWinCombination {
 
 	@Setter
 	private String name;

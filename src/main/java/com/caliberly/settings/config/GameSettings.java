@@ -1,7 +1,7 @@
 package com.caliberly.settings.config;
 
-import com.caliberly.Symbol;
-import com.caliberly.WinCombination;
+import com.caliberly.model.Symbol;
+import com.caliberly.combinations.WinCombination;
 import lombok.Getter;
 
 import java.util.List;
