@@ -13,14 +13,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GameMachine {
 	protected static final Logger logger = LogManager.getLogger();
 
-	private List<SymbolTile> gameArea = new ArrayList<>();
+	private Map<Point2D.Float, SymbolTile> gameArea = new HashMap<>();
 	private final GameSettings settings;
 
 	public GameMachine(GameSettings gameSettings) {
@@ -46,7 +44,7 @@ public class GameMachine {
 			for (int column = 0; column < this.settings.getColumns(); column++) { //loop for generating columns
 				Point2D.Float coordinates = new Point2D.Float();
 				coordinates.setLocation(row, column);
-				this.gameArea.add(new SymbolTile(coordinates, this.settings.getSymbols()));
+				this.gameArea.put(coordinates, new SymbolTile(coordinates, this.settings.getSymbols()));
 			}
 		}
 	}
@@ -64,8 +62,9 @@ public class GameMachine {
 						}
 					}
 				}
-				//check for rest
-				//TODO
+			}
+			if (winCombination.getWhen().equals(CombinationWhen.LINEAR_SYMBOL)) {
+				winningCombinations.addAll(CombinationChecker.getLinearSymbolResult(winCombination, gameArea));
 			}
 		}
 		this.showResults(winningCombinations);
