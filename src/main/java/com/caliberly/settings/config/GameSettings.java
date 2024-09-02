@@ -15,16 +15,16 @@ public class GameSettings {
 	private final int columns;
 	private final List<Symbol> symbols;
 	private final List<WinCombination> winCombinations;
-	private final Map<Point2D.Float, Map<String, Integer>> standardSymbolsProbabilities;
-	private final Map<String, Integer> standardPointProbabilities;
+	private final Map<Point2D.Float, Map<String, Integer>> pointSymbolsProbabilities;
+	private final Map<String, Integer> symbolsProbabilities;
 
 	public GameSettings(GameSettingsLoader gameSettingsLoader) {
 		this.symbols = gameSettingsLoader.getSymbols();
 		this.rows = gameSettingsLoader.getRows();
 		this.columns = gameSettingsLoader.getColumns();
 		this.winCombinations = gameSettingsLoader.getWinCombinations();
-		this.standardSymbolsProbabilities = gameSettingsLoader.getCoordsBasedProbabilities();
-		this.standardPointProbabilities = gameSettingsLoader.getSymbolBasedProbabilities();
+		this.pointSymbolsProbabilities = gameSettingsLoader.getCoordsBasedProbabilities();
+		this.symbolsProbabilities = gameSettingsLoader.getSymbolBasedProbabilities();
 	}
 
 }

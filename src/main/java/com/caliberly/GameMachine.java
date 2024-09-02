@@ -44,7 +44,9 @@ public class GameMachine {
 			for (int column = 0; column < this.settings.getColumns(); column++) { //loop for generating columns
 				Point2D.Float coordinates = new Point2D.Float();
 				coordinates.setLocation(row, column);
-				this.gameArea.put(coordinates, new SymbolTile(coordinates, this.settings.getSymbols()));
+				Map<String, Integer> availableSymbols = new HashMap<>(this.settings.getPointSymbolsProbabilities().get(new Point2D.Float(row, column)));
+				availableSymbols.putAll(this.settings.getSymbolsProbabilities());
+				this.gameArea.put(coordinates, new SymbolTile(coordinates, this.settings.getSymbols(), availableSymbols));
 			}
 		}
 	}
