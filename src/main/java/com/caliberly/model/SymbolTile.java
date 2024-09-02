@@ -19,6 +19,14 @@ public class SymbolTile {
 		this.generateSymbol(availableSymbols);
 	}
 
+	/**
+	 * Probability magic:
+	 * Excluded bonus symbols:
+	 * Percentage A =(1/21)×100 = 4.76%
+	 * Percentage B =(2/21)×100 = 9.52%
+	 *
+	 * @param symbols
+	 */
 	private void generateSymbol(List<Symbol> symbols) {
 		int totalProbability = 0;
 		for (int value : this.probabilities.values()) {

@@ -21,11 +21,11 @@ public class GameMachine {
 	private Map<Point2D.Float, SymbolTile> gameArea = new HashMap<>();
 	private final GameSettings settings;
 
-	public GameMachine(GameSettings gameSettings) {
+	public GameMachine(GameSettings gameSettings, int amount) {
 		logger.info("Game machine dispatched");
 		this.settings = gameSettings;
 		//this line could be in a loop to keep playing
-		this.startGame(1000);
+		this.startGame(amount);
 
 		this.gameEnd();
 	}
