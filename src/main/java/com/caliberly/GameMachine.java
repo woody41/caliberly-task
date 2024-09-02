@@ -49,7 +49,7 @@ public class GameMachine {
 		}
 	}
 
-	private void checkResults() {
+	private List<WinningCombination> checkResults() {
 		List<WinningCombination> winningCombinations = new LinkedList<>();
 		for (WinCombination winCombination : this.settings.getWinCombinations()) {
 			if (winCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
@@ -68,9 +68,13 @@ public class GameMachine {
 			}
 		}
 		this.showResults(winningCombinations);
+		return winningCombinations;
 	}
 
 	private void showResults(List<WinningCombination> winningCombinations) {
+		if (winningCombinations.isEmpty()) {
+			logger.debug("No winning combinations");
+		}
 		for (WinningCombination winningCombination : winningCombinations) {
 			logger.debug(winningCombination.getName() + " is winning combinations. Winning symbol: " + winningCombination.getSymbol().getName());
 		}

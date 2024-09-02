@@ -3,9 +3,13 @@ package com.caliberly.utils;
 import com.caliberly.combinations.GeneralWinCombination;
 import com.caliberly.combinations.WinCombination;
 import com.caliberly.combinations.WinningCombination;
+import com.caliberly.enums.SymbolType;
 import com.caliberly.exceptions.NoWinningCombinationException;
 import com.caliberly.model.Symbol;
 import com.caliberly.model.SymbolTile;
+import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -14,6 +18,12 @@ import java.util.*;
  * Static util for combination checker
  */
 public final class CombinationChecker {
+
+	static final Logger logger = LogManager.getLogger();
+
+	private CombinationChecker() {
+	}
+
 	public static <T extends GeneralWinCombination> WinningCombination getSameSymbolResult(T combination, Map<Point2D.Float, SymbolTile> gameArea, Symbol symbol) {
 		Map<Point2D.Float, SymbolTile> symbolTiles = new HashMap<>(gameArea);
 		symbolTiles.entrySet().removeIf(tile -> !tile.getValue().getSymbol().equals(symbol));
@@ -32,15 +42,22 @@ public final class CombinationChecker {
 
 				Symbol currentSymbol = null;
 				for (Point2D.Float coords : getCoveredArea(area)) {
-					if (currentSymbol == null) {
+					if (currentSymbol == null && gameArea.get(coords).getSymbol().getSymbolType().equals(SymbolType.STANDARD)) {
 						currentSymbol = gameArea.get(coords).getSymbol();
-					} else if (!currentSymbol.equals(gameArea.get(coords).getSymbol())) {
+					} else if (!gameArea.get(coords).getSymbol().equals(currentSymbol)) {
 						throw new NoWinningCombinationException();
 					}
+				}
+				if (currentSymbol == null) {
+					//this could happen if there are only bonuses
+					throw new NoWinningCombinationException();
 				}
 				winningCombinations.add(new WinningCombination(combination, currentSymbol));
 			} catch (NoWinningCombinationException e) {
 				//Not winning combination
+			} catch (NumberFormatException | IndexOutOfBoundsException e) {
+				logger.error("ERROR - Config file is probably corrupted:");
+				logger.error(e.getMessage());
 			}
 		}
 		return winningCombinations;

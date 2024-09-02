@@ -6,8 +6,10 @@ import com.caliberly.enums.CombinationWhen;
 import com.caliberly.enums.SymbolType;
 import com.google.gson.*;
 
+import java.awt.geom.Point2D;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -77,5 +79,59 @@ public class GameSettingsLoader {
 		}
 
 		return winCombination;
+	}
+
+	public Map<Point2D.Float, Map<String, Integer>> getCoordsBasedProbabilities() {
+		Map<Point2D.Float, Map<String, Integer>> standardSymbols = new HashMap<>();
+
+		JsonObject probabilities = this.allSettings.getAsJsonObject("probabilities");
+
+		for (Map.Entry<String, JsonElement> entry : probabilities.entrySet()) {
+			if (entry.getKey().equals("standard_symbols")) {
+				//loop standard_symbols array
+				for (JsonElement standardSymbolElement : entry.getValue().getAsJsonArray()) {
+
+					Point2D.Float coords = new Point2D.Float();
+					Map<String, Integer> probs = new HashMap<>();
+
+					for (Map.Entry<String, JsonElement> standardSymbolEntry : standardSymbolElement.getAsJsonObject().entrySet()) {
+						if (standardSymbolEntry.getKey().equals("row")) {
+							coords.x = standardSymbolEntry.getValue().getAsFloat();
+						}
+						if (standardSymbolEntry.getKey().equals("column")) {
+							coords.y = standardSymbolEntry.getValue().getAsFloat();
+						}
+						if (standardSymbolEntry.getKey().equals("symbols")) {
+							for (Map.Entry<String, JsonElement> probValue : standardSymbolEntry.getValue().getAsJsonObject().entrySet()) {
+								probs.put(probValue.getKey(), probValue.getValue().getAsInt());
+							}
+						}
+					}
+					standardSymbols.put(coords, probs);
+				}
+			}
+		}
+		return standardSymbols;
+	}
+
+	public Map<String, Integer> getSymbolBasedProbabilities() {
+		JsonObject probabilities = this.allSettings.getAsJsonObject("probabilities");
+		Map<String, Integer> probs = new HashMap<>();
+
+		for (Map.Entry<String, JsonElement> entry : probabilities.entrySet()) {
+			if (entry.getKey().equals("bonus_symbols")) {
+				//loop standard_symbols array
+
+
+				for (Map.Entry<String, JsonElement> standardSymbolEntry : entry.getValue().getAsJsonObject().entrySet()) {
+					if (standardSymbolEntry.getKey().equals("symbols")) {
+						for (Map.Entry<String, JsonElement> probValue : standardSymbolEntry.getValue().getAsJsonObject().entrySet()) {
+							probs.put(probValue.getKey(), probValue.getValue().getAsInt());
+						}
+					}
+				}
+			}
+		}
+		return probs;
 	}
 }
