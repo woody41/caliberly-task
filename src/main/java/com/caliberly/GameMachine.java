@@ -33,7 +33,8 @@ public class GameMachine {
 	public void startGame(int amount) {
 		this.generateArea();
 		GameAreaPrinter.print(this.gameArea); // visualization of game area
-		this.checkResults();
+		List<WinningCombination> winningCombinations = this.checkResults();
+		this.exportResults(winningCombinations, amount);
 	}
 
 	/**
@@ -80,6 +81,40 @@ public class GameMachine {
 		for (WinningCombination winningCombination : winningCombinations) {
 			logger.debug(winningCombination.getName() + " is winning combinations. Winning symbol: " + winningCombination.getSymbol().getName());
 		}
+	}
+
+	private void exportResults(List<WinningCombination> winningCombinations, double bettingAmount) {
+		List<List<String>> gameMap = new LinkedList();
+		for (int row = 0; row < this.settings.getRows(); row++) {
+			List<String> rowArray = new LinkedList<>();
+			for (int col = 0; col < this.settings.getColumns(); col++) {
+				rowArray.add(this.gameArea.get(new Point2D.Float(row, col)).getSymbol().getName());
+			}
+			gameMap.add(rowArray);
+		}
+		//Check for bonus which adds points
+		for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
+			if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
+				bettingAmount += symbolTile.getValue().getSymbol().getExtra();
+		}
+		//Check for bonus which adds points
+		for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
+			if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
+				if (symbolTile.getValue().getSymbol().getReward_multiplier() != 0) {
+					bettingAmount *= symbolTile.getValue().getSymbol().getReward_multiplier();
+				}
+		}
+		//Check for winning combination which multiply points
+		for (WinningCombination winningCombination : winningCombinations) {
+			if(winningCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
+				bettingAmount *= winningCombination.getSymbol().getReward_multiplier();
+			}
+			if (winningCombination.getReward_multiplier() != 0) {
+				bettingAmount *= winningCombination.getReward_multiplier();
+			}
+		}
+		logger.debug("Result: " + bettingAmount);
+
 	}
 
 	/**

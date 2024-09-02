@@ -13,6 +13,8 @@ public interface GeneralWinCombination {
 
 	int getCount();
 
+	double getReward_multiplier();
+
 	CombinationWhen getWhen();
 
 	String getGroup();
