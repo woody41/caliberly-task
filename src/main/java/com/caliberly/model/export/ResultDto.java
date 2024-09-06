@@ -15,15 +15,18 @@ public class ResultDto {
 	@SerializedName("applied_bonus_symbol")
 	private List<String> appliedBonusSymbol;
 	@SerializedName("applied_winning_combinations")
-	private Map<String, List<String>> appliedWinningCombinations = new HashMap<>();
+	private Map<String, List<String>> appliedWinningCombinations;
 
 	public void setAppliedWinningCombinations(List<WinningCombination> winningCombinations) {
 		for (WinningCombination winningCombination : winningCombinations) {
-			if (this.appliedWinningCombinations.containsKey(winningCombination.getSymbol().getName())) {
+			if (this.appliedWinningCombinations != null && this.appliedWinningCombinations.containsKey(winningCombination.getSymbol().getName())) {
 				List<String> oldValues = new LinkedList<>(this.appliedWinningCombinations.get(winningCombination.getSymbol().getName())); //prevent of immutable list
 				oldValues.add(winningCombination.getName());
 				this.appliedWinningCombinations.replace(winningCombination.getSymbol().getName(), oldValues);
+			} else if(this.appliedWinningCombinations != null) {
+				this.appliedWinningCombinations.put(winningCombination.getSymbol().getName(), List.of(winningCombination.getName()));
 			} else {
+				this.appliedWinningCombinations = new HashMap<>();
 				this.appliedWinningCombinations.put(winningCombination.getSymbol().getName(), List.of(winningCombination.getName()));
 			}
 		}

@@ -26,7 +26,7 @@ public class GameMachine {
 	private final GameSettings settings;
 
 	public GameMachine(GameSettings gameSettings, int amount) {
-		logger.info("Game machine dispatched");
+		logger.debug("Game machine dispatched");
 		this.settings = gameSettings;
 		//this line could be in a loop to keep playing
 		this.startGame(amount);
@@ -80,10 +80,10 @@ public class GameMachine {
 
 	private void showResults(List<WinningCombination> winningCombinations) {
 		if (winningCombinations.isEmpty()) {
-			logger.info("No winning combinations");
+			logger.debug("No winning combinations");
 		}
 		for (WinningCombination winningCombination : winningCombinations) {
-			logger.info("{} is winning combinations. Winning symbol: {}", winningCombination.getName(), winningCombination.getSymbol().getName());
+			logger.debug("{} is winning combinations. Winning symbol: {}", winningCombination.getName(), winningCombination.getSymbol().getName());
 		}
 	}
 
@@ -93,8 +93,10 @@ public class GameMachine {
 		ResultDto resultDto = new ResultDto();
 		resultDto.setReward(this.getFinalBettingAmount(winningCombinations, bettingAmount)); //setting reward
 		resultDto.setMatrix(this.getGameAreaMatrix());
-		resultDto.setAppliedBonusSymbol(this.getAppliedBonus());
-		resultDto.setAppliedWinningCombinations(winningCombinations);
+		if (!winningCombinations.isEmpty()) {
+			resultDto.setAppliedWinningCombinations(winningCombinations);
+			resultDto.setAppliedBonusSymbol(this.getAppliedBonus());
+		}
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonElement jsonDto = gson.toJsonTree(resultDto);
@@ -104,33 +106,38 @@ public class GameMachine {
 
 	private double getFinalBettingAmount(List<WinningCombination> winningCombinations, double bettingAmount) {
 
-		//Check for bonus which adds points
-		for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
-			if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
-				bettingAmount += symbolTile.getValue().getSymbol().getExtra();
-		}
-		//Check for bonus which adds points
-		for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
-			if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
-				if (symbolTile.getValue().getSymbol().getReward_multiplier() != 0) {
-					bettingAmount *= symbolTile.getValue().getSymbol().getReward_multiplier();
+		if (!winningCombinations.isEmpty()) {
+			//Check for bonus which adds points
+			for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
+				if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
+					bettingAmount += symbolTile.getValue().getSymbol().getExtra();
+			}
+			//Check for bonus which adds points
+			for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
+				if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
+					if (symbolTile.getValue().getSymbol().getReward_multiplier() != 0) {
+						bettingAmount *= symbolTile.getValue().getSymbol().getReward_multiplier();
+					}
+			}
+			//Check for winning combination which multiply points
+			for (WinningCombination winningCombination : winningCombinations) {
+				if (winningCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
+					bettingAmount *= winningCombination.getSymbol().getReward_multiplier();
 				}
-		}
-		//Check for winning combination which multiply points
-		for (WinningCombination winningCombination : winningCombinations) {
-			if (winningCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
-				bettingAmount *= winningCombination.getSymbol().getReward_multiplier();
+				if (winningCombination.getReward_multiplier() != 0) {
+					bettingAmount *= winningCombination.getReward_multiplier();
+				}
 			}
-			if (winningCombination.getReward_multiplier() != 0) {
-				bettingAmount *= winningCombination.getReward_multiplier();
-			}
+			logger.debug("Result: {}", bettingAmount);
+			return bettingAmount;
+		} else {
+			logger.debug("Game lost");
+			return 0;
 		}
-		logger.debug("Result: {}", bettingAmount);
-		return bettingAmount;
 	}
 
 	private List<List<String>> getGameAreaMatrix() {
-		List<List<String>> gameMap = new LinkedList();
+		List<List<String>> gameMap = new LinkedList<>();
 		for (int row = 0; row < this.settings.getRows(); row++) {
 			List<String> rowArray = new LinkedList<>();
 			for (int col = 0; col < this.settings.getColumns(); col++) {
