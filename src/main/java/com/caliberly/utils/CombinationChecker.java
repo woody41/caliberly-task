@@ -19,7 +19,7 @@ import java.util.*;
  */
 public final class CombinationChecker {
 
-	static final Logger logger = LogManager.getLogger();
+	static final Logger logger = LogManager.getLogger(CombinationChecker.class);
 
 	private CombinationChecker() {
 	}

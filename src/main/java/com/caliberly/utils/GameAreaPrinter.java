@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class GameAreaPrinter {
-	protected static final Logger logger = LogManager.getLogger();
+	protected static final Logger logger = LogManager.getLogger(GameAreaPrinter.class);
 
 	/**
 	 * @param tiles = current game area

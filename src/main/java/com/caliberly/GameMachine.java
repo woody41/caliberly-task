@@ -16,7 +16,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 
 public class GameMachine {
-	protected static final Logger logger = LogManager.getLogger();
+	protected static final Logger logger = LogManager.getLogger(GameMachine.class);
 
 	private Map<Point2D.Float, SymbolTile> gameArea = new HashMap<>();
 	private final GameSettings settings;
@@ -76,10 +76,10 @@ public class GameMachine {
 
 	private void showResults(List<WinningCombination> winningCombinations) {
 		if (winningCombinations.isEmpty()) {
-			logger.debug("No winning combinations");
+			logger.info("No winning combinations");
 		}
 		for (WinningCombination winningCombination : winningCombinations) {
-			logger.debug(winningCombination.getName() + " is winning combinations. Winning symbol: " + winningCombination.getSymbol().getName());
+			logger.info(winningCombination.getName() + " is winning combinations. Winning symbol: " + winningCombination.getSymbol().getName());
 		}
 	}
 

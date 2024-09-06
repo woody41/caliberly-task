@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 public class GameRunner {
-	protected static final Logger logger = LogManager.getLogger();
+	protected static final Logger logger = LogManager.getLogger(GameRunner.class);
 
 	public static void main(String[] args) {
 		Configurator.setRootLevel(Level.DEBUG);
