@@ -1,8 +1,6 @@
 package com.caliberly;
 
-import com.caliberly.combinations.WinCombination;
 import com.caliberly.combinations.WinningCombination;
-import com.caliberly.enums.CombinationWhen;
 import com.caliberly.enums.SymbolType;
 import com.caliberly.model.Symbol;
 import com.caliberly.model.SymbolTile;
@@ -22,8 +20,8 @@ import static org.junit.Assert.*;
 
 public class GameMachineTest {
 
-	private Map<Point2D.Float, SymbolTile> gameArea = new HashMap<>();
-	private GameSettings settings;
+	private final Map<Point2D.Float, SymbolTile> gameArea = new HashMap<>();
+	private final GameSettings settings;
 
 	public GameMachineTest() {
 		this.settings = new GameSettings(new GameSettingsLoader("config.json"));
@@ -108,9 +106,23 @@ public class GameMachineTest {
 	 */
 	@Test
 	public void CheckWinningCombinations() {
-		assertEquals("same_symbol_5_times", this.settings.getWinCombinations().stream().filter(c -> c.getName().equals("same_symbol_5_times")).findFirst().orElseThrow().getName());
-		assertEquals("same_symbols_horizontally", this.settings.getWinCombinations().stream().filter(c -> c.getName().equals("same_symbols_horizontally")).findFirst().orElseThrow().getName());
-		assertEquals("same_symbols_diagonally_left_to_right", this.settings.getWinCombinations().stream().filter(c -> c.getName().equals("same_symbols_diagonally_left_to_right")).findFirst().orElseThrow().getName());
+		assert CombinationChecker.getSameSymbolResult(this.settings.getWinCombinations().stream().filter(c -> c.getName().equals("same_symbol_5_times")).findFirst().orElseThrow(), this.gameArea, new Symbol("A", SymbolType.STANDARD, 5, 0)) != null;
+		assertEquals("same_symbol_5_times", CombinationChecker.getSameSymbolResult(this.settings.getWinCombinations().stream().filter(c -> c.getName().equals("same_symbol_5_times")).findFirst().orElseThrow(), this.gameArea, new Symbol("A", SymbolType.STANDARD, 5, 0)).getName());
+
+		List<WinningCombination> winningCombinations = new LinkedList<>();
+		winningCombinations.add(new WinningCombination(this.settings.getWinCombinations().stream().filter(w -> w.getName().equals("same_symbols_horizontally")).findFirst().orElseThrow(), new Symbol("A", SymbolType.STANDARD, 5, 0)));
+		assertListEquals(winningCombinations, CombinationChecker.getLinearSymbolResult(this.settings.getWinCombinations().stream().filter(c -> c.getName().equals("same_symbols_horizontally")).findFirst().orElseThrow(), this.gameArea));
+
+
+		winningCombinations = new LinkedList<>();
+		winningCombinations.add(new WinningCombination(this.settings.getWinCombinations().stream().filter(w -> w.getName().equals("same_symbols_diagonally_left_to_right")).findFirst().orElseThrow(), new Symbol("A", SymbolType.STANDARD, 5, 0)));
+		assertListEquals(winningCombinations, CombinationChecker.getLinearSymbolResult(this.settings.getWinCombinations().stream().filter(c -> c.getName().equals("same_symbols_diagonally_left_to_right")).findFirst().orElseThrow(), this.gameArea));
+	}
+
+	private void assertListEquals(List<?> list1, List<?> list2) {
+		for (Object o : list1) {
+			assertTrue(list2.contains(o));
+		}
 	}
 
 }

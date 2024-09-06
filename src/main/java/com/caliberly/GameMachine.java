@@ -99,7 +99,7 @@ public class GameMachine {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonElement jsonDto = gson.toJsonTree(resultDto);
 
-		logger.info(jsonDto.toString());
+		logger.info(jsonDto.toString()); //this is final requirement
 	}
 
 	private double getFinalBettingAmount(List<WinningCombination> winningCombinations, double bettingAmount) {

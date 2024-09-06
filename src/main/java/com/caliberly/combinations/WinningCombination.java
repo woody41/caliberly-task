@@ -22,4 +22,16 @@ public class WinningCombination extends WinCombination {
 		super(winCombination.getName(), winCombination.getCount(), winCombination.getReward_multiplier(), winCombination.getWhen(), winCombination.getGroup(), winCombination.getCovered_areas());
 		this.symbol = symbol;
 	}
+
+	@Override
+	public int hashCode() {
+		return symbol.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		return this.symbol.equals(((WinningCombination) o).symbol);
+	}
 }

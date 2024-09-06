@@ -1,6 +1,7 @@
 package com.caliberly.model.export;
 
 import com.caliberly.combinations.WinningCombination;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,9 @@ import java.util.*;
 public class ResultDto {
 	private List<List<String>> matrix;
 	private double reward;
+	@SerializedName("applied_bonus_symbol")
 	private List<String> appliedBonusSymbol;
+	@SerializedName("applied_winning_combinations")
 	private Map<String, List<String>> appliedWinningCombinations = new HashMap<>();
 
 	public void setAppliedWinningCombinations(List<WinningCombination> winningCombinations) {
