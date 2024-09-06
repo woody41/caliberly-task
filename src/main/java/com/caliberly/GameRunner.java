@@ -36,8 +36,8 @@ public class GameRunner {
 			configFilePath = cmd.getOptionValue("config");
 			bettingAmountValue = Integer.parseInt(cmd.getOptionValue("betting-amount"));
 
-			logger.debug("Loaded param config: " + configFilePath);
-			logger.debug("Loaded param betting amount: " + bettingAmountValue);
+			logger.debug("Loaded param config: {}", configFilePath);
+			logger.debug("Loaded param betting amount: {}", bettingAmountValue);
 
 		} catch (ParseException e) {
 			logger.error(e.getMessage());

@@ -4,11 +4,15 @@ import com.caliberly.combinations.WinCombination;
 import com.caliberly.combinations.WinningCombination;
 import com.caliberly.enums.CombinationWhen;
 import com.caliberly.enums.SymbolType;
+import com.caliberly.model.export.ResultDto;
 import com.caliberly.model.Symbol;
 import com.caliberly.model.SymbolTile;
 import com.caliberly.settings.config.GameSettings;
 import com.caliberly.utils.CombinationChecker;
 import com.caliberly.utils.GameAreaPrinter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,19 +83,27 @@ public class GameMachine {
 			logger.info("No winning combinations");
 		}
 		for (WinningCombination winningCombination : winningCombinations) {
-			logger.info(winningCombination.getName() + " is winning combinations. Winning symbol: " + winningCombination.getSymbol().getName());
+			logger.info("{} is winning combinations. Winning symbol: {}", winningCombination.getName(), winningCombination.getSymbol().getName());
 		}
 	}
 
 	private void exportResults(List<WinningCombination> winningCombinations, double bettingAmount) {
-		List<List<String>> gameMap = new LinkedList();
-		for (int row = 0; row < this.settings.getRows(); row++) {
-			List<String> rowArray = new LinkedList<>();
-			for (int col = 0; col < this.settings.getColumns(); col++) {
-				rowArray.add(this.gameArea.get(new Point2D.Float(row, col)).getSymbol().getName());
-			}
-			gameMap.add(rowArray);
-		}
+
+
+		ResultDto resultDto = new ResultDto();
+		resultDto.setReward(this.getFinalBettingAmount(winningCombinations, bettingAmount)); //setting reward
+		resultDto.setMatrix(this.getGameAreaMatrix());
+		resultDto.setAppliedBonusSymbol(this.getAppliedBonus());
+		resultDto.setAppliedWinningCombinations(winningCombinations);
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JsonElement jsonDto = gson.toJsonTree(resultDto);
+
+		logger.info(jsonDto.toString());
+	}
+
+	private double getFinalBettingAmount(List<WinningCombination> winningCombinations, double bettingAmount) {
+
 		//Check for bonus which adds points
 		for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
 			if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
@@ -106,15 +118,37 @@ public class GameMachine {
 		}
 		//Check for winning combination which multiply points
 		for (WinningCombination winningCombination : winningCombinations) {
-			if(winningCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
+			if (winningCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
 				bettingAmount *= winningCombination.getSymbol().getReward_multiplier();
 			}
 			if (winningCombination.getReward_multiplier() != 0) {
 				bettingAmount *= winningCombination.getReward_multiplier();
 			}
 		}
-		logger.debug("Result: " + bettingAmount);
+		logger.debug("Result: {}", bettingAmount);
+		return bettingAmount;
+	}
 
+	private List<List<String>> getGameAreaMatrix() {
+		List<List<String>> gameMap = new LinkedList();
+		for (int row = 0; row < this.settings.getRows(); row++) {
+			List<String> rowArray = new LinkedList<>();
+			for (int col = 0; col < this.settings.getColumns(); col++) {
+				rowArray.add(this.gameArea.get(new Point2D.Float(row, col)).getSymbol().getName());
+			}
+			gameMap.add(rowArray);
+		}
+		return gameMap;
+	}
+
+	private List<String> getAppliedBonus() {
+		List<String> results = new LinkedList<>();
+		for (Map.Entry<Point2D.Float, SymbolTile> entry : this.gameArea.entrySet()) {
+			if (entry.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS)) {
+				results.add(entry.getValue().getSymbol().getName());
+			}
+		}
+		return results;
 	}
 
 	/**
