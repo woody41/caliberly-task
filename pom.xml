@@ -55,7 +55,6 @@
 
 	</dependencies>
 	<build>
-		<!-- To define the plugin version in your parent POM -->
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -65,7 +64,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<!-- To use the plugin goals in your POM or parent POM -->
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -82,6 +80,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>
