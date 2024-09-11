@@ -12,11 +12,12 @@ public class SymbolTile {
 	private Symbol symbol;
 	private final Point2D.Float coordinates;
 	private final Map<String, Integer> probabilities;
+	private static final Random random = new Random();
 
 	public SymbolTile(Point2D.Float coordinates, List<Symbol> availableSymbols, Map<String, Integer> probabilities) {
 		this.coordinates = coordinates;
 		this.probabilities = probabilities;
-		this.generateSymbol(availableSymbols);
+		this.generateSymbol(availableSymbols, this.probabilities);
 	}
 
 	/**
@@ -27,9 +28,9 @@ public class SymbolTile {
 	 *
 	 * @param symbols
 	 */
-	private void generateSymbol(List<Symbol> symbols) {
+	public void generateSymbol(List<Symbol> symbols, Map<String, Integer> localProbabilities) {
 		int totalProbability = 0;
-		for (int value : this.probabilities.values()) {
+		for (int value : localProbabilities.values()) {
 			totalProbability += value;
 		}
 
@@ -37,7 +38,7 @@ public class SymbolTile {
 		double cumulativeSum = 0.0;
 
 		if (totalProbability != 0) {
-			for (Map.Entry<String, Integer> entry : probabilities.entrySet()) {
+			for (Map.Entry<String, Integer> entry : localProbabilities.entrySet()) {
 				cumulativeSum += (double) entry.getValue() / totalProbability;
 				cumulativeProbabilities.put(entry.getKey(), cumulativeSum);
 			}
@@ -49,7 +50,6 @@ public class SymbolTile {
 	}
 
 	public static String selectSymbolBasedOnProbability(Map<String, Double> cumulativeProbabilities) {
-		Random random = new Random();
 		double randomValue = random.nextDouble();
 
 		for (Map.Entry<String, Double> entry : cumulativeProbabilities.entrySet()) {

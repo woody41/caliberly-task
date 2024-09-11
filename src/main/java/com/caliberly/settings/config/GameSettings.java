@@ -1,5 +1,6 @@
 package com.caliberly.settings.config;
 
+import com.caliberly.enums.SymbolType;
 import com.caliberly.model.Symbol;
 import com.caliberly.combinations.WinCombination;
 import lombok.Getter;
@@ -25,6 +26,10 @@ public class GameSettings {
 		this.winCombinations = gameSettingsLoader.getWinCombinations();
 		this.pointSymbolsProbabilities = gameSettingsLoader.getCoordsBasedProbabilities();
 		this.symbolsProbabilities = gameSettingsLoader.getSymbolBasedProbabilities();
+	}
+
+	public List<Symbol> getSymbols(SymbolType symbolType) {
+		return symbols.stream().filter(s -> s.getSymbolType().equals(symbolType)).toList();
 	}
 
 }

@@ -24,6 +24,7 @@ public class GameMachine {
 
 	private Map<Point2D.Float, SymbolTile> gameArea = new HashMap<>();
 	private final GameSettings settings;
+	private final Random rand = new Random();
 
 	public GameMachine(GameSettings gameSettings, int amount) {
 		logger.debug("Game machine dispatched");
@@ -50,10 +51,17 @@ public class GameMachine {
 				Point2D.Float coordinates = new Point2D.Float();
 				coordinates.setLocation(row, column);
 				Map<String, Integer> availableSymbols = new HashMap<>(this.settings.getPointSymbolsProbabilities().get(new Point2D.Float(row, column)));
-				availableSymbols.putAll(this.settings.getSymbolsProbabilities());
-				this.gameArea.put(coordinates, new SymbolTile(coordinates, this.settings.getSymbols(), availableSymbols));
+				this.gameArea.put(coordinates, new SymbolTile(coordinates, this.settings.getSymbols(SymbolType.STANDARD), availableSymbols));
 			}
 		}
+		//this.settings.getSymbolsProbabilities()
+		this.addBonusSymbol();
+	}
+
+	private void addBonusSymbol() {
+		int col = this.rand.nextInt(this.settings.getColumns());
+		int row = this.rand.nextInt(this.settings.getRows());
+		this.gameArea.get(new Point2D.Float(col, row)).generateSymbol(this.settings.getSymbols(SymbolType.BONUS), this.settings.getSymbolsProbabilities());
 	}
 
 	private List<WinningCombination> checkResults() {
@@ -95,7 +103,10 @@ public class GameMachine {
 		resultDto.setMatrix(this.getGameAreaMatrix());
 		if (!winningCombinations.isEmpty()) {
 			resultDto.setAppliedWinningCombinations(winningCombinations);
-			resultDto.setAppliedBonusSymbol(this.getAppliedBonus());
+			String bonus = this.getAppliedBonus();
+			if (bonus != null) {
+				resultDto.setAppliedBonusSymbol(this.getAppliedBonus());
+			}
 		}
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -148,14 +159,13 @@ public class GameMachine {
 		return gameMap;
 	}
 
-	private List<String> getAppliedBonus() {
-		List<String> results = new LinkedList<>();
+	private String getAppliedBonus() {
 		for (Map.Entry<Point2D.Float, SymbolTile> entry : this.gameArea.entrySet()) {
 			if (entry.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS)) {
-				results.add(entry.getValue().getSymbol().getName());
+				return entry.getValue().getSymbol().getName();
 			}
 		}
-		return results;
+		return null;
 	}
 
 	/**

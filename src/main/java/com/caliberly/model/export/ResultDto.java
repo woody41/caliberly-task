@@ -13,7 +13,7 @@ public class ResultDto {
 	private List<List<String>> matrix;
 	private double reward;
 	@SerializedName("applied_bonus_symbol")
-	private List<String> appliedBonusSymbol;
+	private String appliedBonusSymbol;
 	@SerializedName("applied_winning_combinations")
 	private Map<String, List<String>> appliedWinningCombinations;
 
