@@ -1,7 +1,7 @@
 package com.caliberly;
 
 import com.caliberly.settings.config.GameSettings;
-import com.caliberly.settings.config.GameSettingsLoader;
+import com.caliberly.settings.config.GameSettingsLoaderFile;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +46,7 @@ public class GameRunner {
 		}
 
 
-		GameSettings gameSettings = new GameSettings(new GameSettingsLoader(configFilePath));
+		GameSettings gameSettings = new GameSettings(new GameSettingsLoaderFile(configFilePath));
 		new GameMachine(gameSettings, bettingAmountValue);
 	}
 

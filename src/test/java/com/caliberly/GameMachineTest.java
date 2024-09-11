@@ -5,7 +5,7 @@ import com.caliberly.enums.SymbolType;
 import com.caliberly.model.Symbol;
 import com.caliberly.model.SymbolTile;
 import com.caliberly.settings.config.GameSettings;
-import com.caliberly.settings.config.GameSettingsLoader;
+import com.caliberly.settings.config.GameSettingsLoaderFile;
 import com.caliberly.utils.CombinationChecker;
 import com.caliberly.utils.GameAreaPrinter;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class GameMachineTest {
 	private final GameSettings settings;
 
 	public GameMachineTest() {
-		this.settings = new GameSettings(new GameSettingsLoader("config.json"));
+		this.settings = new GameSettings(new GameSettingsLoaderFile("config.json"));
 		this.generateArea();
 	}
 
