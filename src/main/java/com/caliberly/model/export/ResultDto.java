@@ -11,7 +11,7 @@ import java.util.*;
 @Data
 public class ResultDto {
 	private List<List<String>> matrix;
-	private double reward;
+	private int reward;
 	@SerializedName("applied_bonus_symbol")
 	private String appliedBonusSymbol;
 	@SerializedName("applied_winning_combinations")

@@ -115,9 +115,12 @@ public class GameMachine {
 		logger.info(jsonDto.toString()); //this is final requirement
 	}
 
-	private double getFinalBettingAmount(List<WinningCombination> winningCombinations, double bettingAmount) {
+	private int getFinalBettingAmount(List<WinningCombination> winningCombinations, double bettingAmount) {
 
 		if (!winningCombinations.isEmpty()) {
+			//get final result for standard symbols
+			bettingAmount = this.getSumFromWinningCombinations(winningCombinations, bettingAmount);
+
 			//Check for bonus which adds points
 			for (Map.Entry<Point2D.Float, SymbolTile> symbolTile : this.gameArea.entrySet()) {
 				if (symbolTile.getValue().getSymbol().getSymbolType().equals(SymbolType.BONUS))
@@ -130,21 +133,47 @@ public class GameMachine {
 						bettingAmount *= symbolTile.getValue().getSymbol().getReward_multiplier();
 					}
 			}
-			//Check for winning combination which multiply points
-			for (WinningCombination winningCombination : winningCombinations) {
-				if (winningCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
-					bettingAmount *= winningCombination.getSymbol().getReward_multiplier();
-				}
-				if (winningCombination.getReward_multiplier() != 0) {
-					bettingAmount *= winningCombination.getReward_multiplier();
-				}
-			}
-			logger.debug("Result: {}", bettingAmount);
-			return bettingAmount;
+
+			logger.debug("Result: {}", (int) bettingAmount);
+			return (int) bettingAmount;
 		} else {
 			logger.debug("Game lost");
 			return 0;
 		}
+	}
+
+
+	/**
+	 * Sum of winning combination by Symbol.
+	 * (SYMBOL_1 * WIN_COMBINATION_1_FOR_SYMBOL_1 * WIN_COMBINATION_2_FOR_SYMBOL_1) + (SYMBOL_2 * WIN_COMBINATION_1_FOR_SYMBOL_2)
+	 *
+	 * @param winningCombinations
+	 * @param bettingAmount
+	 * @return
+	 */
+	private double getSumFromWinningCombinations(List<WinningCombination> winningCombinations, double bettingAmount) {
+		List<Symbol> winningSymbols = new LinkedList<>();
+		double result = 0;
+		for (WinningCombination winningCombination : winningCombinations) {
+			if (!winningSymbols.contains(winningCombination.getSymbol())) {
+				winningSymbols.add(winningCombination.getSymbol());
+			}
+		}
+		for (Symbol symbol : winningSymbols) {
+			double multiplier = 1;
+			for (WinningCombination winningCombination : winningCombinations) {
+				if (winningCombination.getSymbol().equals(symbol)) {
+					if (winningCombination.getWhen().equals(CombinationWhen.SAME_SYMBOL)) {
+						multiplier *= winningCombination.getSymbol().getReward_multiplier();
+					}
+					if (winningCombination.getReward_multiplier() != 0) {
+						multiplier *= winningCombination.getReward_multiplier();
+					}
+				}
+			}
+			result += bettingAmount * multiplier;
+		}
+		return result;
 	}
 
 	private List<List<String>> getGameAreaMatrix() {
